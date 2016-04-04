@@ -82,6 +82,8 @@ import it.geosolutions.imageio.plugins.tiff.TIFFField;
 import it.geosolutions.imageio.plugins.tiff.TIFFImageWriteParam;
 import it.geosolutions.imageio.plugins.tiff.TIFFTag;
 import it.geosolutions.imageio.plugins.tiff.TIFFTagSet;
+import it.geosolutions.imageioimpl.plugins.tiff.TIFFImageMetadata;
+import it.geosolutions.imageioimpl.plugins.tiff.TIFFStreamMetadata;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -397,6 +399,11 @@ public class TIFFImageWriter extends ImageWriter {
 
     public IIOMetadata
         getDefaultStreamMetadata(ImageWriteParam param) {
+        TIFFStreamMetadata metadata = new TIFFStreamMetadata();
+        if(param != null && param instanceof TIFFImageWriteParam ){
+          TIFFImageWriteParam c_param = (TIFFImageWriteParam) param;
+          metadata.bigTIFF_enabled = c_param.isForceToBigTIFF();
+        }      
         return new TIFFStreamMetadata();
     }
 
@@ -435,6 +442,7 @@ public class TIFFImageWriter extends ImageWriter {
         if(inData instanceof TIFFStreamMetadata) {
             outData = new TIFFStreamMetadata();
             outData.byteOrder = ((TIFFStreamMetadata)inData).byteOrder;
+            outData.bigTIFF_enabled = ((TIFFStreamMetadata)inData).bigTIFF_enabled;
             return outData;
         } else if(Arrays.asList(inData.getMetadataFormatNames()).contains(
                       TIFFStreamMetadata.nativeMetadataFormatName)) {
@@ -2617,6 +2625,7 @@ public class TIFFImageWriter extends ImageWriter {
     private void writeHeader() throws IOException {
         if (streamMetadata != null) {
             this.byteOrder = streamMetadata.byteOrder;
+            this.isBtiff = streamMetadata.bigTIFF_enabled;
         } else {
             this.byteOrder = ByteOrder.BIG_ENDIAN;
         }

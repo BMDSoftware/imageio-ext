@@ -125,6 +125,9 @@ public class TIFFStreamMetadata extends IIOMetadata {
 
     /** Node name associated to the file ByteOrder */
     public static final String BYTE_ORDER = "ByteOrder";
+    
+    /** Quick fix !! TODO: */
+    public static final String BIG_TIFF_ENABLED = "BigTIFF";
 
     /**
      * Enum used for defining the various node of the Metadata Tree
@@ -309,6 +312,8 @@ public class TIFFStreamMetadata extends IIOMetadata {
 
     /** {@link DatasetLayout} associated to the Metadata*/
     public TiffDatasetLayoutImpl dtLayout = new TiffDatasetLayoutImpl();
+    
+    public boolean bigTIFF_enabled = false;
 
     public TIFFStreamMetadata() {
         super(false,
@@ -467,5 +472,7 @@ public class TIFFStreamMetadata extends IIOMetadata {
     public void reset() {
         this.byteOrder = ByteOrder.BIG_ENDIAN;
         dtLayout = new TiffDatasetLayoutImpl();
+        this.bigTIFF_enabled = false;
     }
+        
 }
